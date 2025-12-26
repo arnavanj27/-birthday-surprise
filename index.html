@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>For You ❤️</title>
 
   <style>
@@ -13,13 +13,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-family: "Helvetica Neue", Arial, sans-serif;
       overflow: hidden;
     }
 
     .lock, .container {
       text-align: center;
       animation: fadeIn 1.2s ease;
+      max-width: 90%;
     }
 
     .emoji {
@@ -55,6 +56,26 @@
       color: white;
     }
 
+    .slideshow img {
+      width: 100%;
+      max-height: 60vh;
+      object-fit: contain;
+      border-radius: 16px;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .slideshow img.show {
+      opacity: 1;
+    }
+
+    .caption {
+      margin-top: 14px;
+      font-size: 16px;
+      opacity: 0.85;
+      min-height: 40px;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -85,8 +106,7 @@
         "God bless you beta ❤️"
       ];
 
-      let line = 0;
-      let char = 0;
+      let line = 0, char = 0;
 
       function type() {
         if (line < text.length) {
@@ -110,11 +130,38 @@
 
     function showPhotos() {
       document.body.innerHTML = `
-        <div class="container">
-          <h2>Our Memories ❤️</h2>
-          <p>(Photos coming next)</p>
+        <div class="container slideshow">
+          <img id="photo" />
+          <div id="caption" class="caption"></div>
         </div>
       `;
+
+      const photos = [
+        { src: "photo1.jpeg", caption: "Our first memory ❤️" },
+        { src: "photo2.jpeg", caption: "Always smiling with you" },
+        { src: "photo3.jpeg", caption: "This day still makes me happy" },
+        { src: "photo4.jpeg", caption: "You make everything brighter" },
+        // add captions till photo24
+        { src: "photo24.jpeg", caption: "Forever grateful for you ❤️" }
+      ];
+
+      let index = 0;
+      const img = document.getElementById("photo");
+      const cap = document.getElementById("caption");
+
+      function showNext() {
+        img.classList.remove("show");
+
+        setTimeout(() => {
+          img.src = photos[index].src;
+          cap.innerText = photos[index].caption;
+          img.onload = () => img.classList.add("show");
+          index = (index + 1) % photos.length;
+        }, 400);
+      }
+
+      showNext();
+      setInterval(showNext, 3500);
     }
   </script>
 
