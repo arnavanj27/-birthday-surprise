@@ -4,39 +4,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>For You ❤️</title>
+
   <style>
     body {
       margin: 0;
       height: 100vh;
+      background: linear-gradient(135deg, #fdeff9, #ecf2ff);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #fdf6f0;
-      font-family: Arial, sans-serif;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      transition: background 1s ease;
     }
+
     .lock {
       text-align: center;
-      font-size: 22px;
       cursor: pointer;
+      animation: fadeIn 1.5s ease;
     }
-    .sub {
+
+    .lock .emoji {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .lock .title {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .lock .sub {
       margin-top: 10px;
       font-size: 16px;
-      opacity: 0.7;
+      opacity: 0.65;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message {
+      text-align: center;
+      font-size: 26px;
+      animation: fadeIn 1.5s ease;
     }
   </style>
 </head>
 <body>
 
   <div class="lock" onclick="unlock()">
-    <div>🔒 This is for you</div>
+    <div class="emoji">❤️</div>
+    <div class="title">This is for you</div>
     <div class="sub">Tap when you’re ready</div>
   </div>
 
   <script>
     function unlock() {
       document.body.innerHTML = `
-        <div style="text-align:center;font-size:24px;">
+        <div class="message">
           🎉 Happy Birthday ❤️
         </div>
       `;
