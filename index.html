@@ -76,6 +76,12 @@
       min-height: 38px;
     }
 
+    .final {
+      font-size: 24px;
+      line-height: 1.6;
+      animation: fadeIn 1.5s ease;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -131,7 +137,7 @@
       type();
     }
 
-    /* STEP 2: SLIDESHOW (ALL 24 PHOTOS) */
+    /* STEP 2: SLIDESHOW + END */
     function showPhotos() {
       document.body.innerHTML = `
         <div class="container slideshow">
@@ -173,19 +179,37 @@
       const img = document.getElementById("photo");
       const cap = document.getElementById("caption");
 
+      const interval = setInterval(showNext, 3500);
+      showNext();
+
       function showNext() {
+        if (index === totalPhotos) {
+          clearInterval(interval);
+          showFinal();
+          return;
+        }
+
         img.classList.remove("show");
 
         setTimeout(() => {
           img.src = `photo${index + 1}.jpeg`;
-          cap.innerText = captions[index] || "";
+          cap.innerText = captions[index];
           img.onload = () => img.classList.add("show");
-          index = (index + 1) % totalPhotos;
+          index++;
         }, 400);
       }
+    }
 
-      showNext();
-      setInterval(showNext, 3500);
+    /* STEP 3: FINAL SCREEN */
+    function showFinal() {
+      document.body.innerHTML = `
+        <div class="container final">
+          This was just a small part<br>
+          of how much you mean to me.
+          <br><br>
+          Happy Birthday, Anjali ❤️
+        </div>
+      `;
     }
   </script>
 
