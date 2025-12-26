@@ -14,7 +14,6 @@
       align-items: center;
       justify-content: center;
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      transition: background 1s ease;
     }
 
     .lock {
@@ -39,15 +38,22 @@
       opacity: 0.65;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .message {
       text-align: center;
       font-size: 26px;
+      line-height: 1.4;
       animation: fadeIn 1.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
@@ -63,7 +69,8 @@
     function unlock() {
       document.body.innerHTML = `
         <div class="message">
-          🎉 Happy Birthday Anjali, God bless you beta ❤️
+          🎉 Happy Birthday Anjali,<br>
+          God bless you beta ❤️
         </div>
       `;
     }
