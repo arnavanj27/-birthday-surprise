@@ -19,8 +19,8 @@
 
     .lock, .container {
       text-align: center;
-      animation: fadeIn 1.2s ease;
       max-width: 92%;
+      animation: fadeIn 1.2s ease;
     }
 
     .emoji {
@@ -56,6 +56,17 @@
       color: white;
     }
 
+    .mute {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 50%;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
     .slideshow img {
       width: 100%;
       max-height: 60vh;
@@ -76,6 +87,12 @@
       min-height: 38px;
     }
 
+    .final {
+      font-size: 24px;
+      line-height: 1.5;
+      animation: fadeIn 1.5s ease;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -85,6 +102,11 @@
 
 <body>
 
+  <!-- BACKGROUND MUSIC -->
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
   <!-- LOCK SCREEN -->
   <div class="lock" onclick="unlock()">
     <div class="emoji">❤️</div>
@@ -93,9 +115,26 @@
   </div>
 
   <script>
-    /* STEP 1: TYPEWRITER MESSAGE */
+    let musicPlaying = false;
+
+    function toggleMusic() {
+      const music = document.getElementById("bgMusic");
+      if (musicPlaying) {
+        music.pause();
+        musicPlaying = false;
+      } else {
+        music.play();
+        musicPlaying = true;
+      }
+    }
+
     function unlock() {
+      const music = document.getElementById("bgMusic");
+      music.play();
+      musicPlaying = true;
+
       document.body.innerHTML = `
+        <div class="mute" onclick="toggleMusic()">🔊</div>
         <div class="container">
           <div id="msg" class="typewriter"></div>
           <button id="nextBtn" class="btn" style="display:none;" onclick="showPhotos()">
@@ -131,9 +170,9 @@
       type();
     }
 
-    /* STEP 2: SLIDESHOW (ALL 24 PHOTOS) */
     function showPhotos() {
       document.body.innerHTML = `
+        <div class="mute" onclick="toggleMusic()">🔊</div>
         <div class="container slideshow">
           <img id="photo" />
           <div id="caption" class="caption"></div>
@@ -169,23 +208,45 @@
 
       const totalPhotos = 24;
       let index = 0;
-
       const img = document.getElementById("photo");
       const cap = document.getElementById("caption");
 
       function showNext() {
+        if (index === totalPhotos) {
+          showFinal();
+          return;
+        }
+
         img.classList.remove("show");
 
         setTimeout(() => {
           img.src = `photo${index + 1}.jpeg`;
           cap.innerText = captions[index] || "";
           img.onload = () => img.classList.add("show");
-          index = (index + 1) % totalPhotos;
+          index++;
         }, 400);
       }
 
       showNext();
-      setInterval(showNext, 3500);
+      const interval = setInterval(() => {
+        if (index >= totalPhotos) {
+          clearInterval(interval);
+        } else {
+          showNext();
+        }
+      }, 3500);
+    }
+
+    function showFinal() {
+      document.body.innerHTML = `
+        <div class="mute" onclick="toggleMusic()">🔊</div>
+        <div class="container final">
+          <div>✨ This was just a small part</div>
+          <div>of how much you mean to me.</div>
+          <br>
+          <div>Happy Birthday, Anjali ❤️</div>
+        </div>
+      `;
     }
   </script>
 
