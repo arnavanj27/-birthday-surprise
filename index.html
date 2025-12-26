@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For You ❤️</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fdf6f0;
+      font-family: Arial, sans-serif;
+    }
+    .lock {
+      text-align: center;
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .sub {
+      margin-top: 10px;
+      font-size: 16px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="lock" onclick="unlock()">
+    <div>🔒 This is for you</div>
+    <div class="sub">Tap when you’re ready</div>
+  </div>
+
+  <script>
+    function unlock() {
+      document.body.innerHTML = `
+        <div style="text-align:center;font-size:24px;">
+          🎉 Happy Birthday ❤️
+        </div>
+      `;
+    }
+  </script>
+
+</body>
+</html>
