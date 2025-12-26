@@ -20,22 +20,15 @@
     .screen {
       text-align: center;
       max-width: 92%;
-      animation: fadeIn 1.2s ease;
+      animation: fadeIn 1s ease;
     }
 
     .emoji { font-size: 42px; margin-bottom: 14px; }
     .title { font-size: 24px; }
-    .sub { font-size: 16px; opacity: 0.65; margin-top: 10px; }
-
-    .typewriter {
-      font-size: 26px;
-      line-height: 1.5;
-      white-space: pre-line;
-      margin-bottom: 28px;
-    }
+    .sub { font-size: 16px; opacity: 0.65; margin: 10px 0 20px; }
 
     .btn {
-      padding: 12px 24px;
+      padding: 12px 26px;
       border-radius: 30px;
       border: none;
       font-size: 16px;
@@ -44,11 +37,18 @@
       color: white;
     }
 
+    .typewriter {
+      font-size: 26px;
+      line-height: 1.5;
+      white-space: pre-line;
+      margin-bottom: 26px;
+    }
+
     .mute {
       position: fixed;
       top: 16px;
       right: 16px;
-      background: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.85);
       border-radius: 50%;
       padding: 10px;
       cursor: pointer;
@@ -65,7 +65,12 @@
     }
 
     .slideshow img.show { opacity: 1; }
-    .caption { margin-top: 14px; font-size: 16px; min-height: 36px; }
+
+    .caption {
+      margin-top: 14px;
+      font-size: 16px;
+      min-height: 36px;
+    }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -76,13 +81,14 @@
 
 <body>
 
-<!-- AUDIO (must never be removed) -->
+<!-- AUDIO (never removed) -->
 <audio id="bgMusic" src="music.mp3" preload="auto"></audio>
 
 <div id="app" class="screen">
   <div class="emoji">❤️</div>
   <div class="title">This is for you</div>
-  <div class="sub">Tap when you’re ready</div>
+  <div class="sub">Tap the button when you’re ready</div>
+  <button class="btn" onclick="start()">Start</button>
 </div>
 
 <script>
@@ -102,7 +108,7 @@
     }
   }
 
-  app.onclick = () => {
+  function start() {
     music.volume = 0.4;
     music.play();
     playing = true;
@@ -131,12 +137,13 @@
           setTimeout(type, 500);
         }
       } else {
-        document.getElementById("nextBtn").style.display = "inline-block";
-        document.getElementById("nextBtn").onclick = showPhotos;
+        const btn = document.getElementById("nextBtn");
+        btn.style.display = "inline-block";
+        btn.onclick = showPhotos;
       }
     }
     type();
-  };
+  }
 
   function showPhotos() {
     const captions = [
