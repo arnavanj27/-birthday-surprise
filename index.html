@@ -38,22 +38,17 @@
       opacity: 0.65;
     }
 
-    .message {
+    .typewriter {
       text-align: center;
       font-size: 26px;
-      line-height: 1.4;
-      animation: fadeIn 1.5s ease;
+      line-height: 1.5;
+      white-space: pre-line;
+      animation: fadeIn 1s ease;
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -67,12 +62,33 @@
 
   <script>
     function unlock() {
-      document.body.innerHTML = `
-        <div class="message">
-          🎉 Happy Birthday Anjali,<br>
-          God bless you beta ❤️
-        </div>
-      `;
+      document.body.innerHTML = '<div id="msg" class="typewriter"></div>';
+
+      const text = [
+        "🎉 Happy Birthday Anjali,",
+        "God bless you beta ❤️"
+      ];
+
+      let line = 0;
+      let char = 0;
+      const speed = 60;
+
+      function type() {
+        if (line < text.length) {
+          if (char < text[line].length) {
+            document.getElementById("msg").innerHTML += text[line].charAt(char);
+            char++;
+            setTimeout(type, speed);
+          } else {
+            document.getElementById("msg").innerHTML += "\n";
+            line++;
+            char = 0;
+            setTimeout(type, 500);
+          }
+        }
+      }
+
+      type();
     }
   </script>
 
