@@ -13,7 +13,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-family: Arial, sans-serif;
       overflow: hidden;
     }
 
@@ -23,21 +23,9 @@
       animation: fadeIn 1.2s ease;
     }
 
-    .emoji {
-      font-size: 42px;
-      margin-bottom: 14px;
-    }
-
-    .title {
-      font-size: 24px;
-      font-weight: 500;
-    }
-
-    .sub {
-      margin-top: 10px;
-      font-size: 16px;
-      opacity: 0.65;
-    }
+    .emoji { font-size: 42px; margin-bottom: 14px; }
+    .title { font-size: 24px; }
+    .sub { font-size: 16px; opacity: 0.65; margin-top: 10px; }
 
     .typewriter {
       font-size: 26px;
@@ -60,7 +48,7 @@
       position: fixed;
       top: 16px;
       right: 16px;
-      background: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.8);
       border-radius: 50%;
       padding: 10px;
       cursor: pointer;
@@ -76,16 +64,9 @@
       transition: opacity 1s ease;
     }
 
-    .slideshow img.show {
-      opacity: 1;
-    }
+    .slideshow img.show { opacity: 1; }
 
-    .caption {
-      margin-top: 14px;
-      font-size: 16px;
-      opacity: 0.85;
-      min-height: 38px;
-    }
+    .caption { margin-top: 14px; font-size: 16px; }
 
     .final {
       font-size: 24px;
@@ -102,153 +83,114 @@
 
 <body>
 
-  <!-- BACKGROUND MUSIC -->
-  <audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mpeg">
-  </audio>
+<audio id="bgMusic">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
 
-  <!-- LOCK SCREEN -->
-  <div class="lock" onclick="unlock()">
-    <div class="emoji">❤️</div>
-    <div class="title">This is for you</div>
-    <div class="sub">Tap when you’re ready</div>
-  </div>
+<div class="lock" onclick="unlock()">
+  <div class="emoji">❤️</div>
+  <div class="title">This is for you</div>
+  <div class="sub">Tap when you’re ready</div>
+</div>
 
-  <script>
-    let musicPlaying = false;
+<script>
+  const music = document.getElementById("bgMusic");
+  let playing = false;
 
-    function toggleMusic() {
-      const music = document.getElementById("bgMusic");
-      if (musicPlaying) {
-        music.pause();
-        musicPlaying = false;
-      } else {
-        music.play();
-        musicPlaying = true;
-      }
-    }
-
-    function unlock() {
-      const music = document.getElementById("bgMusic");
+  function toggleMusic() {
+    if (playing) {
+      music.pause();
+      playing = false;
+      document.querySelector(".mute").innerText = "🔇";
+    } else {
       music.play();
-      musicPlaying = true;
+      playing = true;
+      document.querySelector(".mute").innerText = "🔊";
+    }
+  }
 
-      document.body.innerHTML = `
-        <div class="mute" onclick="toggleMusic()">🔊</div>
-        <div class="container">
-          <div id="msg" class="typewriter"></div>
-          <button id="nextBtn" class="btn" style="display:none;" onclick="showPhotos()">
-            See our memories →
-          </button>
-        </div>
-      `;
+  function unlock() {
+    // user gesture → audio allowed
+    music.volume = 0.5;
+    music.play();
+    playing = true;
 
-      const text = [
-        "🎉 Happy Birthday Anjali,",
-        "God bless you beta ❤️"
-      ];
+    document.body.innerHTML = `
+      <div class="mute" onclick="toggleMusic()">🔊</div>
+      <div class="container">
+        <div id="msg" class="typewriter"></div>
+        <button id="nextBtn" class="btn" style="display:none;" onclick="showPhotos()">
+          See our memories →
+        </button>
+      </div>
+    `;
 
-      let line = 0, char = 0;
+    const text = [
+      "🎉 Happy Birthday Anjali,",
+      "God bless you beta ❤️"
+    ];
 
-      function type() {
-        if (line < text.length) {
-          if (char < text[line].length) {
-            document.getElementById("msg").innerHTML += text[line].charAt(char);
-            char++;
-            setTimeout(type, 60);
-          } else {
-            document.getElementById("msg").innerHTML += "\n";
-            line++;
-            char = 0;
-            setTimeout(type, 500);
-          }
+    let line = 0, char = 0;
+
+    function type() {
+      if (line < text.length) {
+        if (char < text[line].length) {
+          document.getElementById("msg").innerHTML += text[line][char++];
+          setTimeout(type, 60);
         } else {
-          document.getElementById("nextBtn").style.display = "inline-block";
+          document.getElementById("msg").innerHTML += "\n";
+          line++; char = 0;
+          setTimeout(type, 500);
         }
+      } else {
+        document.getElementById("nextBtn").style.display = "inline-block";
       }
+    }
+    type();
+  }
 
-      type();
+  function showPhotos() {
+    document.body.innerHTML = `
+      <div class="mute" onclick="toggleMusic()">🔊</div>
+      <div class="container slideshow">
+        <img id="photo">
+        <div id="caption" class="caption"></div>
+      </div>
+    `;
+
+    const captions = Array(24).fill("A memory I’ll always keep ❤️");
+    let index = 0;
+
+    const img = document.getElementById("photo");
+    const cap = document.getElementById("caption");
+
+    function next() {
+      if (index === 24) return showFinal();
+      img.classList.remove("show");
+      setTimeout(() => {
+        img.src = `photo${index + 1}.jpeg`;
+        cap.innerText = captions[index];
+        img.onload = () => img.classList.add("show");
+        index++;
+      }, 300);
     }
 
-    function showPhotos() {
-      document.body.innerHTML = `
-        <div class="mute" onclick="toggleMusic()">🔊</div>
-        <div class="container slideshow">
-          <img id="photo" />
-          <div id="caption" class="caption"></div>
-        </div>
-      `;
+    next();
+    setInterval(next, 3500);
+  }
 
-      const captions = [
-        "Our first memory ❤️",
-        "Smiling without effort",
-        "This day still stays with me",
-        "You make moments brighter",
-        "Comfort feels like this",
-        "Us being us",
-        "A memory I treasure",
-        "Always my favourite",
-        "Pure happiness",
-        "One of my favourite days",
-        "You in your element",
-        "Simple, beautiful moments",
-        "Laughter I remember",
-        "Always thankful for this",
-        "Moments I replay",
-        "This one makes me smile",
-        "You make days lighter",
-        "Memories like these",
-        "Forever special",
-        "My happy place",
-        "Still feels warm",
-        "Always close to my heart",
-        "So many memories",
-        "Forever grateful for you ❤️"
-      ];
-
-      const totalPhotos = 24;
-      let index = 0;
-      const img = document.getElementById("photo");
-      const cap = document.getElementById("caption");
-
-      function showNext() {
-        if (index === totalPhotos) {
-          showFinal();
-          return;
-        }
-
-        img.classList.remove("show");
-
-        setTimeout(() => {
-          img.src = `photo${index + 1}.jpeg`;
-          cap.innerText = captions[index] || "";
-          img.onload = () => img.classList.add("show");
-          index++;
-        }, 400);
-      }
-
-      showNext();
-      const interval = setInterval(() => {
-        if (index >= totalPhotos) {
-          clearInterval(interval);
-        } else {
-          showNext();
-        }
-      }, 3500);
-    }
-
-    function showFinal() {
-      document.body.innerHTML = `
-        <div class="mute" onclick="toggleMusic()">🔊</div>
-        <div class="container final">
-          <div>✨ This was just a small part</div>
-          <div>of how much you mean to me.</div>
-          <br>
-          <div>Happy Birthday, Anjali ❤️</div>
-        </div>
-      `;
-    }
-  </script>
+  function showFinal() {
+    document.body.innerHTML = `
+      <div class="mute" onclick="toggleMusic()">🔊</div>
+      <div class="container final">
+        <div>This was just a small part</div>
+        <div>of how much you mean to me.</div>
+        <br>
+        <div>Happy Birthday, Anjali ❤️</div>
+      </div>
+    `;
+  }
+</script>
 
 </body>
 </html>
