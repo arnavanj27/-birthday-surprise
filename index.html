@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>For You ❤️</title>
 
   <style>
@@ -13,46 +13,47 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: Arial, sans-serif;
+      font-family: "Helvetica Neue", Arial, sans-serif;
       overflow: hidden;
     }
 
-    .screen {
+    .lock, .container {
       text-align: center;
+      animation: fadeIn 1.2s ease;
       max-width: 92%;
-      animation: fadeIn 1s ease;
     }
 
-    .emoji { font-size: 42px; margin-bottom: 14px; }
-    .title { font-size: 24px; }
-    .sub { font-size: 16px; opacity: 0.65; margin: 10px 0 20px; }
+    .emoji {
+      font-size: 42px;
+      margin-bottom: 14px;
+    }
 
-    .btn {
-      padding: 12px 26px;
-      border-radius: 30px;
-      border: none;
+    .title {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .sub {
+      margin-top: 10px;
       font-size: 16px;
-      cursor: pointer;
-      background: #ff8fab;
-      color: white;
+      opacity: 0.65;
     }
 
     .typewriter {
       font-size: 26px;
       line-height: 1.5;
       white-space: pre-line;
-      margin-bottom: 26px;
+      margin-bottom: 28px;
     }
 
-    .mute {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: rgba(255,255,255,0.85);
-      border-radius: 50%;
-      padding: 10px;
+    .btn {
+      padding: 12px 24px;
+      border-radius: 30px;
+      border: none;
+      font-size: 16px;
       cursor: pointer;
-      font-size: 18px;
+      background: #ff8fab;
+      color: white;
     }
 
     .slideshow img {
@@ -64,12 +65,15 @@
       transition: opacity 1s ease;
     }
 
-    .slideshow img.show { opacity: 1; }
+    .slideshow img.show {
+      opacity: 1;
+    }
 
     .caption {
       margin-top: 14px;
       font-size: 16px;
-      min-height: 36px;
+      opacity: 0.85;
+      min-height: 38px;
     }
 
     @keyframes fadeIn {
@@ -81,138 +85,109 @@
 
 <body>
 
-<!-- AUDIO (never removed) -->
-<audio id="bgMusic" src="music.mp3" preload="auto"></audio>
+  <!-- LOCK SCREEN -->
+  <div class="lock" onclick="unlock()">
+    <div class="emoji">❤️</div>
+    <div class="title">This is for you</div>
+    <div class="sub">Tap when you’re ready</div>
+  </div>
 
-<div id="app" class="screen">
-  <div class="emoji">❤️</div>
-  <div class="title">This is for you</div>
-  <div class="sub">Tap the button when you’re ready</div>
-  <button class="btn" onclick="start()">Start</button>
-</div>
+  <script>
+    /* STEP 1: TYPEWRITER MESSAGE */
+    function unlock() {
+      document.body.innerHTML = `
+        <div class="container">
+          <div id="msg" class="typewriter"></div>
+          <button id="nextBtn" class="btn" style="display:none;" onclick="showPhotos()">
+            See our memories →
+          </button>
+        </div>
+      `;
 
-<script>
-  const app = document.getElementById("app");
-  const music = document.getElementById("bgMusic");
-  let playing = false;
+      const text = [
+        "🎉 Happy Birthday Anjali,",
+        "God bless you beta ❤️"
+      ];
 
-  function toggleMusic() {
-    if (playing) {
-      music.pause();
-      playing = false;
-      document.querySelector(".mute").innerText = "🔇";
-    } else {
-      music.play();
-      playing = true;
-      document.querySelector(".mute").innerText = "🔊";
-    }
-  }
+      let line = 0, char = 0;
 
-  function start() {
-    music.volume = 0.4;
-    music.play();
-    playing = true;
-
-    app.innerHTML = `
-      <div class="mute" onclick="toggleMusic()">🔊</div>
-      <div id="msg" class="typewriter"></div>
-      <button id="nextBtn" class="btn" style="display:none;">See our memories →</button>
-    `;
-
-    const text = [
-      "🎉 Happy Birthday Anjali,",
-      "God bless you beta ❤️"
-    ];
-
-    let line = 0, char = 0;
-
-    function type() {
-      if (line < text.length) {
-        if (char < text[line].length) {
-          document.getElementById("msg").innerHTML += text[line][char++];
-          setTimeout(type, 60);
+      function type() {
+        if (line < text.length) {
+          if (char < text[line].length) {
+            document.getElementById("msg").innerHTML += text[line].charAt(char);
+            char++;
+            setTimeout(type, 60);
+          } else {
+            document.getElementById("msg").innerHTML += "\n";
+            line++;
+            char = 0;
+            setTimeout(type, 500);
+          }
         } else {
-          document.getElementById("msg").innerHTML += "\n";
-          line++; char = 0;
-          setTimeout(type, 500);
+          document.getElementById("nextBtn").style.display = "inline-block";
         }
-      } else {
-        const btn = document.getElementById("nextBtn");
-        btn.style.display = "inline-block";
-        btn.onclick = showPhotos;
       }
-    }
-    type();
-  }
 
-  function showPhotos() {
-    const captions = [
-      "Our first memory ❤️",
-      "That smile I fell for",
-      "A day I still replay",
-      "You make everything lighter",
-      "Comfort looks like this",
-      "Just us being us",
-      "Moments I quietly treasure",
-      "You, effortlessly happy",
-      "This one still warms my heart",
-      "One of my favourite days",
-      "You in your element",
-      "Simple moments, big meaning",
-      "That laugh I remember",
-      "Always thankful for this day",
-      "A memory I hold close",
-      "This made me smile instantly",
-      "You make ordinary days special",
-      "Moments like these matter",
-      "Forever special to me",
-      "My calm, my happy place",
-      "Still feels just as warm",
-      "Always close to my heart",
-      "So many memories with you",
-      "Forever grateful for you ❤️"
-    ];
-
-    let index = 0;
-    const total = 24;
-
-    app.innerHTML = `
-      <div class="mute" onclick="toggleMusic()">🔊</div>
-      <div class="slideshow">
-        <img id="photo">
-        <div id="caption" class="caption"></div>
-      </div>
-    `;
-
-    const img = document.getElementById("photo");
-    const cap = document.getElementById("caption");
-
-    function next() {
-      if (index === total) return showFinal();
-      img.classList.remove("show");
-      setTimeout(() => {
-        img.src = \`photo\${index + 1}.jpeg\`;
-        cap.innerText = captions[index];
-        img.onload = () => img.classList.add("show");
-        index++;
-      }, 300);
+      type();
     }
 
-    next();
-    setInterval(next, 3500);
-  }
+    /* STEP 2: SLIDESHOW (ALL 24 PHOTOS) */
+    function showPhotos() {
+      document.body.innerHTML = `
+        <div class="container slideshow">
+          <img id="photo" />
+          <div id="caption" class="caption"></div>
+        </div>
+      `;
 
-  function showFinal() {
-    app.innerHTML = `
-      <div class="mute" onclick="toggleMusic()">🔊</div>
-      <div style="font-size:24px;line-height:1.5">
-        This was just a small part<br>
-        of how much you mean to me.<br><br>
-        Happy Birthday, Anjali ❤️
-      </div>
-    `;
-  }
-</script>
+      const captions = [
+        "Our first memory ❤️",
+        "Smiling without effort",
+        "This day still stays with me",
+        "You make moments brighter",
+        "Comfort feels like this",
+        "Us being us",
+        "A memory I treasure",
+        "Always my favourite",
+        "Pure happiness",
+        "One of my favourite days",
+        "You in your element",
+        "Simple, beautiful moments",
+        "Laughter I remember",
+        "Always thankful for this",
+        "Moments I replay",
+        "This one makes me smile",
+        "You make days lighter",
+        "Memories like these",
+        "Forever special",
+        "My happy place",
+        "Still feels warm",
+        "Always close to my heart",
+        "So many memories",
+        "Forever grateful for you ❤️"
+      ];
+
+      const totalPhotos = 24;
+      let index = 0;
+
+      const img = document.getElementById("photo");
+      const cap = document.getElementById("caption");
+
+      function showNext() {
+        img.classList.remove("show");
+
+        setTimeout(() => {
+          img.src = `photo${index + 1}.jpeg`;
+          cap.innerText = captions[index] || "";
+          img.onload = () => img.classList.add("show");
+          index = (index + 1) % totalPhotos;
+        }, 400);
+      }
+
+      showNext();
+      setInterval(showNext, 3500);
+    }
+  </script>
 
 </body>
 </html>
