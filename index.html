@@ -23,21 +23,9 @@
       max-width: 92%;
     }
 
-    .emoji {
-      font-size: 42px;
-      margin-bottom: 14px;
-    }
-
-    .title {
-      font-size: 24px;
-      font-weight: 500;
-    }
-
-    .sub {
-      margin-top: 10px;
-      font-size: 16px;
-      opacity: 0.65;
-    }
+    .emoji { font-size: 42px; margin-bottom: 14px; }
+    .title { font-size: 24px; font-weight: 500; }
+    .sub { margin-top: 10px; font-size: 16px; opacity: 0.65; }
 
     .typewriter {
       font-size: 26px;
@@ -65,9 +53,7 @@
       transition: opacity 1s ease;
     }
 
-    .slideshow img.show {
-      opacity: 1;
-    }
+    .slideshow img.show { opacity: 1; }
 
     .caption {
       margin-top: 14px;
@@ -91,29 +77,31 @@
 
 <body>
 
-  <!-- BACKGROUND MUSIC -->
+  <!-- AUDIO (never destroyed) -->
   <audio id="bgMusic" src="music.mp3" preload="auto" loop></audio>
 
-  <!-- LOCK SCREEN -->
-  <div class="lock" onclick="unlock()">
-    <div class="emoji">❤️</div>
-    <div class="title">This is for you</div>
-    <div class="sub">Tap when you’re ready</div>
+  <!-- APP CONTAINER -->
+  <div id="app">
+    <div class="lock" onclick="unlock()">
+      <div class="emoji">❤️</div>
+      <div class="title">This is for you</div>
+      <div class="sub">Tap when you’re ready</div>
+    </div>
   </div>
 
   <script>
+    const app = document.getElementById("app");
     const music = document.getElementById("bgMusic");
 
-    /* STEP 1: TYPEWRITER MESSAGE */
     function unlock() {
-      // Start music on user gesture (browser-safe)
+      // user gesture → audio allowed
       music.volume = 0.4;
-      music.play();
+      music.play().catch(() => {});
 
-      document.body.innerHTML = `
+      app.innerHTML = `
         <div class="container">
           <div id="msg" class="typewriter"></div>
-          <button id="nextBtn" class="btn" style="display:none;" onclick="showPhotos()">
+          <button id="nextBtn" class="btn" style="display:none;">
             See our memories →
           </button>
         </div>
@@ -129,26 +117,24 @@
       function type() {
         if (line < text.length) {
           if (char < text[line].length) {
-            document.getElementById("msg").innerHTML += text[line].charAt(char);
-            char++;
+            document.getElementById("msg").innerHTML += text[line][char++];
             setTimeout(type, 60);
           } else {
             document.getElementById("msg").innerHTML += "\n";
-            line++;
-            char = 0;
+            line++; char = 0;
             setTimeout(type, 500);
           }
         } else {
           document.getElementById("nextBtn").style.display = "inline-block";
+          document.getElementById("nextBtn").onclick = showPhotos;
         }
       }
 
       type();
     }
 
-    /* STEP 2: SLIDESHOW + END */
     function showPhotos() {
-      document.body.innerHTML = `
+      app.innerHTML = `
         <div class="container slideshow">
           <img id="photo" />
           <div id="caption" class="caption"></div>
@@ -182,24 +168,23 @@
         "Forever grateful for you ❤️"
       ];
 
-      const totalPhotos = 24;
       let index = 0;
+      const total = 24;
 
       const img = document.getElementById("photo");
       const cap = document.getElementById("caption");
 
-      const interval = setInterval(showNext, 3500);
-      showNext();
+      const interval = setInterval(next, 3500);
+      next();
 
-      function showNext() {
-        if (index === totalPhotos) {
+      function next() {
+        if (index === total) {
           clearInterval(interval);
           showFinal();
           return;
         }
 
         img.classList.remove("show");
-
         setTimeout(() => {
           img.src = `photo${index + 1}.jpeg`;
           cap.innerText = captions[index];
@@ -209,9 +194,8 @@
       }
     }
 
-    /* STEP 3: FINAL SCREEN */
     function showFinal() {
-      document.body.innerHTML = `
+      app.innerHTML = `
         <div class="container final">
           This was just a small part<br>
           of how much you mean to me.
