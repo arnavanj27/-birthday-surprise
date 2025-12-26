@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>For You ❤️</title>
 
   <style>
@@ -17,7 +17,7 @@
       overflow: hidden;
     }
 
-    .lock, .container {
+    .screen {
       text-align: center;
       max-width: 92%;
       animation: fadeIn 1.2s ease;
@@ -65,14 +65,7 @@
     }
 
     .slideshow img.show { opacity: 1; }
-
-    .caption { margin-top: 14px; font-size: 16px; }
-
-    .final {
-      font-size: 24px;
-      line-height: 1.5;
-      animation: fadeIn 1.5s ease;
-    }
+    .caption { margin-top: 14px; font-size: 16px; min-height: 36px; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -83,17 +76,17 @@
 
 <body>
 
-<audio id="bgMusic">
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
+<!-- AUDIO (must never be removed) -->
+<audio id="bgMusic" src="music.mp3" preload="auto"></audio>
 
-<div class="lock" onclick="unlock()">
+<div id="app" class="screen">
   <div class="emoji">❤️</div>
   <div class="title">This is for you</div>
   <div class="sub">Tap when you’re ready</div>
 </div>
 
 <script>
+  const app = document.getElementById("app");
   const music = document.getElementById("bgMusic");
   let playing = false;
 
@@ -109,20 +102,15 @@
     }
   }
 
-  function unlock() {
-    // user gesture → audio allowed
-    music.volume = 0.5;
+  app.onclick = () => {
+    music.volume = 0.4;
     music.play();
     playing = true;
 
-    document.body.innerHTML = `
+    app.innerHTML = `
       <div class="mute" onclick="toggleMusic()">🔊</div>
-      <div class="container">
-        <div id="msg" class="typewriter"></div>
-        <button id="nextBtn" class="btn" style="display:none;" onclick="showPhotos()">
-          See our memories →
-        </button>
-      </div>
+      <div id="msg" class="typewriter"></div>
+      <button id="nextBtn" class="btn" style="display:none;">See our memories →</button>
     `;
 
     const text = [
@@ -144,31 +132,59 @@
         }
       } else {
         document.getElementById("nextBtn").style.display = "inline-block";
+        document.getElementById("nextBtn").onclick = showPhotos;
       }
     }
     type();
-  }
+  };
 
   function showPhotos() {
-    document.body.innerHTML = `
+    const captions = [
+      "Our first memory ❤️",
+      "That smile I fell for",
+      "A day I still replay",
+      "You make everything lighter",
+      "Comfort looks like this",
+      "Just us being us",
+      "Moments I quietly treasure",
+      "You, effortlessly happy",
+      "This one still warms my heart",
+      "One of my favourite days",
+      "You in your element",
+      "Simple moments, big meaning",
+      "That laugh I remember",
+      "Always thankful for this day",
+      "A memory I hold close",
+      "This made me smile instantly",
+      "You make ordinary days special",
+      "Moments like these matter",
+      "Forever special to me",
+      "My calm, my happy place",
+      "Still feels just as warm",
+      "Always close to my heart",
+      "So many memories with you",
+      "Forever grateful for you ❤️"
+    ];
+
+    let index = 0;
+    const total = 24;
+
+    app.innerHTML = `
       <div class="mute" onclick="toggleMusic()">🔊</div>
-      <div class="container slideshow">
+      <div class="slideshow">
         <img id="photo">
         <div id="caption" class="caption"></div>
       </div>
     `;
 
-    const captions = Array(24).fill("A memory I’ll always keep ❤️");
-    let index = 0;
-
     const img = document.getElementById("photo");
     const cap = document.getElementById("caption");
 
     function next() {
-      if (index === 24) return showFinal();
+      if (index === total) return showFinal();
       img.classList.remove("show");
       setTimeout(() => {
-        img.src = `photo${index + 1}.jpeg`;
+        img.src = \`photo\${index + 1}.jpeg\`;
         cap.innerText = captions[index];
         img.onload = () => img.classList.add("show");
         index++;
@@ -180,13 +196,12 @@
   }
 
   function showFinal() {
-    document.body.innerHTML = `
+    app.innerHTML = `
       <div class="mute" onclick="toggleMusic()">🔊</div>
-      <div class="container final">
-        <div>This was just a small part</div>
-        <div>of how much you mean to me.</div>
-        <br>
-        <div>Happy Birthday, Anjali ❤️</div>
+      <div style="font-size:24px;line-height:1.5">
+        This was just a small part<br>
+        of how much you mean to me.<br><br>
+        Happy Birthday, Anjali ❤️
       </div>
     `;
   }
