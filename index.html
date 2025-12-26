@@ -128,41 +128,64 @@
       type();
     }
 
-    function showPhotos() {
-      document.body.innerHTML = `
-        <div class="container slideshow">
-          <img id="photo" />
-          <div id="caption" class="caption"></div>
-        </div>
-      `;
+    <script>
+  function showPhotos() {
+    document.body.innerHTML = `
+      <div class="container slideshow">
+        <img id="photo" />
+        <div id="caption" class="caption"></div>
+      </div>
+    `;
 
-      const photos = [
-        { src: "photo1.jpeg", caption: "Our first memory ❤️" },
-        { src: "photo2.jpeg", caption: "Always smiling with you" },
-        { src: "photo3.jpeg", caption: "This day still makes me happy" },
-        { src: "photo4.jpeg", caption: "You make everything brighter" },
-        // add captions till photo24
-        { src: "photo24.jpeg", caption: "Forever grateful for you ❤️" }
-      ];
+    const captions = [
+      "Our first memory ❤️",
+      "Smiling without effort",
+      "This day still stays with me",
+      "You make moments brighter",
+      "Comfort feels like this",
+      "Us being us",
+      "A memory I treasure",
+      "Always my favourite",
+      "Pure happiness",
+      "One of my favourite days",
+      "You in your element",
+      "Simple, beautiful moments",
+      "Laughter I remember",
+      "Always thankful for this",
+      "Moments I replay",
+      "This one makes me smile",
+      "You make days lighter",
+      "Memories like these",
+      "Forever special",
+      "My happy place",
+      "Still feels warm",
+      "Always close to my heart",
+      "So many memories",
+      "Forever grateful for you ❤️"
+    ];
 
-      let index = 0;
-      const img = document.getElementById("photo");
-      const cap = document.getElementById("caption");
+    const totalPhotos = 24;
+    let index = 0;
 
-      function showNext() {
-        img.classList.remove("show");
+    const img = document.getElementById("photo");
+    const cap = document.getElementById("caption");
 
-        setTimeout(() => {
-          img.src = photos[index].src;
-          cap.innerText = photos[index].caption;
-          img.onload = () => img.classList.add("show");
-          index = (index + 1) % photos.length;
-        }, 400);
-      }
+    function showNext() {
+      img.classList.remove("show");
 
-      showNext();
-      setInterval(showNext, 3500);
+      setTimeout(() => {
+        img.src = `photo${index + 1}.jpeg`;
+        cap.innerText = captions[index] || "";
+        img.onload = () => img.classList.add("show");
+        index = (index + 1) % totalPhotos;
+      }, 400);
     }
+
+    showNext();
+    setInterval(showNext, 3500);
+  }
+</script>
+
   </script>
 
 </body>
