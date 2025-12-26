@@ -14,40 +14,49 @@
       align-items: center;
       justify-content: center;
       font-family: 'Helvetica Neue', Arial, sans-serif;
+      overflow: hidden;
     }
 
-    .lock {
+    .lock, .container {
       text-align: center;
-      cursor: pointer;
-      animation: fadeIn 1.5s ease;
+      animation: fadeIn 1.2s ease;
     }
 
-    .lock .emoji {
+    .emoji {
       font-size: 40px;
       margin-bottom: 12px;
     }
 
-    .lock .title {
+    .title {
       font-size: 24px;
       font-weight: 500;
     }
 
-    .lock .sub {
+    .sub {
       margin-top: 10px;
       font-size: 16px;
       opacity: 0.65;
     }
 
     .typewriter {
-      text-align: center;
       font-size: 26px;
       line-height: 1.5;
       white-space: pre-line;
-      animation: fadeIn 1s ease;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      padding: 12px 22px;
+      border-radius: 30px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      background: #ff8fab;
+      color: white;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
@@ -62,7 +71,14 @@
 
   <script>
     function unlock() {
-      document.body.innerHTML = '<div id="msg" class="typewriter"></div>';
+      document.body.innerHTML = `
+        <div class="container">
+          <div id="msg" class="typewriter"></div>
+          <button id="nextBtn" class="btn" style="display:none;" onclick="showPhotos()">
+            See our memories →
+          </button>
+        </div>
+      `;
 
       const text = [
         "🎉 Happy Birthday Anjali,",
@@ -71,24 +87,34 @@
 
       let line = 0;
       let char = 0;
-      const speed = 60;
 
       function type() {
         if (line < text.length) {
           if (char < text[line].length) {
             document.getElementById("msg").innerHTML += text[line].charAt(char);
             char++;
-            setTimeout(type, speed);
+            setTimeout(type, 60);
           } else {
             document.getElementById("msg").innerHTML += "\n";
             line++;
             char = 0;
             setTimeout(type, 500);
           }
+        } else {
+          document.getElementById("nextBtn").style.display = "inline-block";
         }
       }
 
       type();
+    }
+
+    function showPhotos() {
+      document.body.innerHTML = `
+        <div class="container">
+          <h2>Our Memories ❤️</h2>
+          <p>(Photos coming next)</p>
+        </div>
+      `;
     }
   </script>
 
