@@ -91,6 +91,9 @@
 
 <body>
 
+  <!-- BACKGROUND MUSIC -->
+  <audio id="bgMusic" src="music.mp3" preload="auto" loop></audio>
+
   <!-- LOCK SCREEN -->
   <div class="lock" onclick="unlock()">
     <div class="emoji">❤️</div>
@@ -99,8 +102,14 @@
   </div>
 
   <script>
+    const music = document.getElementById("bgMusic");
+
     /* STEP 1: TYPEWRITER MESSAGE */
     function unlock() {
+      // Start music on user gesture (browser-safe)
+      music.volume = 0.4;
+      music.play();
+
       document.body.innerHTML = `
         <div class="container">
           <div id="msg" class="typewriter"></div>
